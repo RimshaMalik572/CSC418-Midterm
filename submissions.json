@@ -1,0 +1,14 @@
+[
+  {
+    "studentName": "Rimsha Malik",
+    "registrationNumber": "fa23-bai-034",
+    "assignmentTitle": "DevOps Lab Mid",
+    "submissionUrl": "https://github.com/"
+  },
+  {
+    "studentName": "Test Student",
+    "registrationNumber": "TEST-001",
+    "assignmentTitle": "DevOps Test",
+    "submissionUrl": "https://github.com/"
+  }
+]

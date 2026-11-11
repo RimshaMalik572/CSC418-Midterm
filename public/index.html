@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Submission Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000012;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e293b;
+        }
+
+        p {
+            text-align: center;
+            color: #64748b;
+        }
+
+        label {
+            display: block;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 22px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .submission {
+            background: #f8fafc;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Assignment Submission Portal</h1>
+        <p>Submit your assignment details below.</p>
+
+        <form id="submissionForm">
+            <label>Student Name</label>
+            <input type="text" id="studentName" required>
+
+            <label>Registration Number</label>
+            <input type="text" id="registrationNumber" required>
+
+            <label>Assignment Title</label>
+            <input type="text" id="assignmentTitle" required>
+
+            <label>Submission URL</label>
+            <input type="url" id="submissionUrl" required>
+
+            <button type="submit">Submit Assignment</button>
+        </form>
+
+        <div id="message"></div>
+
+        <h2>Submitted Assignments</h2>
+        <div id="submissionList"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById("submissionForm");
+
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const submission = {
+                studentName: document.getElementById("studentName").value.trim(),
+                registrationNumber: document.getElementById("registrationNumber").value.trim(),
+                assignmentTitle: document.getElementById("assignmentTitle").value.trim(),
+                submissionUrl: document.getElementById("submissionUrl").value.trim()
+            };
+
+            const message = document.getElementById("message");
+
+            try {
+                const response = await fetch("/api/submissions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(submission)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    message.style.color = "red";
+                    message.textContent = result.message;
+                    return;
+                }
+
+                message.style.color = "green";
+                message.textContent = "Assignment submitted successfully!";
+                form.reset();
+                loadSubmissions();
+
+            } catch (error) {
+                message.style.color = "red";
+                message.textContent = "Unable to connect to the server.";
+            }
+        });
+
+        async function loadSubmissions() {
+            const response = await fetch("/api/submissions");
+            const submissions = await response.json();
+
+            const list = document.getElementById("submissionList");
+            list.innerHTML = "";
+
+            submissions.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "submission";
+
+                const name = document.createElement("strong");
+                name.textContent = item.studentName;
+
+                const details = document.createElement("p");
+                details.textContent =
+                    item.registrationNumber + " | " + item.assignmentTitle;
+
+                const link = document.createElement("a");
+                link.href = item.submissionUrl;
+                link.textContent = "View Assignment";
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+
+                div.append(name, details, link);
+                list.appendChild(div);
+            });
+        }
+
+        loadSubmissions();
+    </script>
+</body>
+</html>
