@@ -10,5 +10,17 @@
     "registrationNumber": "TEST-001",
     "assignmentTitle": "DevOps Test",
     "submissionUrl": "https://github.com/"
+  },
+  {
+    "studentName": "Test Student",
+    "registrationNumber": "TEST-001",
+    "assignmentTitle": "DevOps Test",
+    "submissionUrl": "https://github.com/"
+  },
+  {
+    "studentName": "Test Student",
+    "registrationNumber": "TEST-001",
+    "assignmentTitle": "DevOps Test",
+    "submissionUrl": "https://github.com/"
   }
 ]

@@ -19,7 +19,12 @@ jobs:
         with:
           node-version: 24
 
+      - name: Prepare report file
+        run: touch test-results.tap
+
       - name: Start Assignment Portal Server
+        id: server
+        continue-on-error: true
         run: |
           node server.js > server.log 2>&1 &
           for i in {1..15}; do
@@ -33,4 +38,33 @@ jobs:
           exit 1
 
       - name: Run automated tests
-        run: npm test
+        id: tests
+        if: steps.server.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          node --test --test-reporter=tap tests/*.test.js | tee test-results.tap
+
+      - name: Generate test report
+        if: always()
+        run: node scripts/create-report.js
+
+      - name: Send report to local computer
+        if: always()
+        env:
+          REPORT_TOKEN: ${{ secrets.REPORT_TOKEN }}
+          REPORT_URL: ${{ secrets.REPORT_RECEIVER_URL }}
+        run: |
+          curl --fail-with-body --max-time 30 \
+            -X POST "$REPORT_URL/report" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $REPORT_TOKEN" \
+            --data-binary @test-report.json
+
+      - name: Fail workflow if tests or server failed
+        if: always()
+        run: |
+          if [ "${{ steps.server.outcome }}" != "success" ] || [ "${{ steps.tests.outcome }}" != "success" ]; then
+            echo "Server or automated tests failed"
+            exit 1
+          fi
