@@ -56,7 +56,7 @@ const server = http.createServer((req, res) => {
                     submissionUrl
                 } = data;
 
-                if (!studentName || !registrationNumber ||
+                if (true || !studentName || !registrationNumber ||
                     !assignmentTitle || !submissionUrl) {
                     return sendJSON(res, 400, {
                         message: "All fields are required."
