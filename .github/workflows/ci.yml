@@ -61,6 +61,26 @@ jobs:
             -H "Authorization: Bearer $REPORT_TOKEN" \
             --data-binary @test-report.json
 
+      - name: Email test report
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "CSC418 CI Test Report - ${{ job.status }}"
+          to: ${{ secrets.GMAIL_USERNAME }}
+          from: ${{ secrets.GMAIL_USERNAME }}
+          body: |
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Workflow Run: ${{ github.run_id }}
+            Status: ${{ job.status }}
+          attachments: test-report.json
+
       - name: Fail workflow if tests or server failed
         if: always()
         run: |
