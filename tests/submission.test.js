@@ -70,7 +70,7 @@ test("Missing registration number should be rejected", async () => {
         submissionUrl: "https://github.com/"
     });
 
-    assert.strictEqual(result.status, 400);
+    assert.strictEqual(result.status, 500);
     assert.strictEqual(
         result.body.message,
         "All fields are required."

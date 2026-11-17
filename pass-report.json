@@ -1,0 +1,28 @@
+{
+  "repository": "RimshaMalik572/CSC418-Midterm",
+  "branch": "main",
+  "commitSHA": "8c342943a06f9f723b41152d6b9a8046ae1d4654",
+  "pipelineRunID": "43243847164",
+  "executionTimestamp": "2026-11-12T15:04:41.021Z",
+  "tests": [
+    {
+      "name": "Valid submission should be accepted and saved",
+      "result": "PASS",
+      "failureMessage": null
+    },
+    {
+      "name": "Missing registration number should be rejected",
+      "result": "PASS",
+      "failureMessage": null
+    },
+    {
+      "name": "Invalid submission URL should be rejected",
+      "result": "PASS",
+      "failureMessage": null
+    }
+  ],
+  "total": 3,
+  "passed": 3,
+  "failed": 0,
+  "status": "PASS"
+}
